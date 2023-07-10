@@ -1,6 +1,5 @@
 //create a post request to create a new employee
 //import and export required stuff
-//confirmed
 import { Router } from "express";
 import { Employee } from "../models/employee.js";
 

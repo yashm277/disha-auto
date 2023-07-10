@@ -1,5 +1,4 @@
 //import router, employee and leave model
-//confirmed
 import { Router } from "express";
 import { Employee } from "../models/employee.js";
 import { Leave } from "../models/leave.js";
@@ -12,6 +11,10 @@ leavesRouter.post("/", async (req, res) => {
     //get the request body
     const body = req.body;
     //create a new leave with the request body
+    //if the employee id is not valid, print "please enter a valid employee id " do this by cross checking the imported employee model
+    // if (!Employee.isValid(body.employee_id)) {
+    //     return res.status(404).json({ message: 'Please enter a valid employee id.' });
+    // }
     const leave = new Leave({
         //look at the leave model to see what fields are required
         employee_id: body.employee_id,
@@ -35,6 +38,16 @@ leavesRouter.get("/", async (req, res) => {
 }
 );
 
+//delete all leaves 
+leavesRouter.delete("/", async (req, res) => {
+    //delete all the leaves from the database
+    const leaves = await Leave.deleteMany({});
+    //send the leaves as a response
+    res.json(leaves);
+}
+);
+
+
 //create a get request to get a single leave
 leavesRouter.get("/:id", async (req, res) => {
     //get the leave id from the request parameters
@@ -49,6 +62,22 @@ leavesRouter.get("/:id", async (req, res) => {
         res.status(404).end();
     }
 });
+
+//create a get request to get the particular employee's leaves
+leavesRouter.get('/employeeid/:id', async (req, res) => {
+    const employeeId = req.params.id;
+    //if the employee id is not valid, print "please enter a valid employee id " do this by cross checking the imported employee model
+    if (!Employee.isValid(employeeId)) {
+        return res.status(404).json({ message: 'Please enter a valid employee id.' });
+    }
+    try {
+        const leaves = await Leave.find({ employee_id: employeeId });
+        res.json(leaves);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+
 
 //export the router
 export { leavesRouter };
