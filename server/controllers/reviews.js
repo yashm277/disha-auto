@@ -2,7 +2,6 @@
 import { Router } from "express";
 import { Employee } from "../models/employee.js";
 import { Review } from "../models/review.js";
-
 //create a router
 const reviewsRouter = Router();
 
@@ -14,11 +13,8 @@ reviewsRouter.post("/", async (req, res) => {
     const review = new Review({
         //look at the review model to see what fields are required
         employee_id: body.employee_id,
-        date: body.date,
-        document: body.document,
-        completed: body.completed,
-        total_score: body.total_score,
-        score_obtained: body.score_obtained,
+        comments: body.comment,
+        rating: body.rating,
     });
     //save the review
     await review.save();
@@ -36,29 +32,21 @@ reviewsRouter.get("/", async (req, res) => {
 }
 );
 
-//create a get request to get a single review
-reviewsRouter.get("/:id", async (req, res) => {
-    //get the review id from the request parameters
-    const id = req.params.id;
-    //find the review with the id
-    const review = await Review.findById(id);
-    //if the review exists send it as a response
-    if (review) {
-        res.json(review);
-    } else {
-        //if the review doesn't exist send a 404 status
-        res.status(404).end();
-    }
-}
-);
 
 //all the reviews for a particular employee
-router.get('/employeeid/:id', async (req, res) => {
+reviewsRouter.get('/employeeid/:id', async (req, res) => {
     const employeeId = req.params.id;
   
     try {
+      // Check if the employee exists
+      const employee = await Employee.findById(employeeId);
+      if (!employee) {
+        return res.status(404).json({ message: 'Please enter a valid employee id.' });
+      }
+  
       const reviews = await Review.find({ employee_id: employeeId });
   
+      // If no reviews are found, return a message
       if (reviews.length === 0) {
         return res.status(404).json({ message: 'No reviews found for the employee.' });
       }
@@ -70,9 +58,23 @@ router.get('/employeeid/:id', async (req, res) => {
     }
   });
   
+  
+//delete a particular review
+reviewsRouter.delete('/:id', async (req, res) => {
+    const id = req.params.id;
+    //find the review with the id
+    const review = await Review.findById(id);
+    //if the review exists, delete it
+    if (review) {
+        await review.remove();
+        res.status(204).end();
+    } else {
+        //if the review doesn't exist send a 404 status
+        res.status(404).end();
+    }
+});
+
+
+
   //export the router
-    export { reviewsRouter };
-
-
-
-
+export { reviewsRouter };

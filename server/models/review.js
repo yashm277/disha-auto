@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 //create schema called reviews with the employee id as a foreign key
 import { Employee } from "./employee.js";
 const reviewSchema = new mongoose.Schema({
@@ -24,4 +24,4 @@ const reviewSchema = new mongoose.Schema({
 
 const Review = mongoose.model("Review", reviewSchema);
 
-module.exports = { Review };
+export { Review };
