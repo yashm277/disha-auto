@@ -5,8 +5,6 @@ import express from "express";
 const app = express()
 //express router
 import { employeesRouter } from './controllers/employees.js'
-import { reviewsRouter } from './controllers/reviews.js'
-import { leavesRouter } from './controllers/leaves.js'
 
 //mongoose is needed to connect to the database
 import mongoose from 'mongoose'
@@ -27,8 +25,5 @@ connectToDB()
 app.use(express.json())
 //define the endpoint: localhost:3001/ for the router
 app.use('/employees', employeesRouter)
-//endpoints for reviews
-app.use('/reviews', reviewsRouter)
-//endpoint for leave
-app.use('/leaves', leavesRouter)
+
 export { app }

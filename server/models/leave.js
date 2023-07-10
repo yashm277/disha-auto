@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { Employee } from "./employee.js";
 
 const leaveSchema = new mongoose.Schema({
   employee_id: {

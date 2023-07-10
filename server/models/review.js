@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 //create schema called reviews with the employee id as a foreign key
+import { Employee } from "./employee.js";
 const reviewSchema = new mongoose.Schema({
     employee_id: {
         type: mongoose.Schema.Types.ObjectId,

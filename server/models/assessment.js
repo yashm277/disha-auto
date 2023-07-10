@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 //create schema called assessment with the training id as a foreign key and similar attributes as the training schema
+import { Training } from "./training.js";
 const assessmentSchema = new mongoose.Schema({
     training_id: {
         type: mongoose.Schema.Types.ObjectId,

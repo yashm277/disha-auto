@@ -1,5 +1,8 @@
 const mongoose = require("mongoose");
 //create a trainings schema that has the employee id as a foreign key, the training category, and the training date
+import { Employee } from "./employee.js";
+import { Training } from "./training.js";
+
 const trainingSchema = new mongoose.Schema({
     employee_id: {
         type: mongoose.Schema.Types.ObjectId,
