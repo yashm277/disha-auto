@@ -38,14 +38,6 @@ leavesRouter.get("/", async (req, res) => {
 }
 );
 
-//delete all leaves 
-leavesRouter.delete("/", async (req, res) => {
-    //delete all the leaves from the database
-    const leaves = await Leave.deleteMany({});
-    //send the leaves as a response
-    res.json(leaves);
-}
-);
 
 
 //create a get request to get a single leave
@@ -66,16 +58,30 @@ leavesRouter.get("/:id", async (req, res) => {
 //create a get request to get the particular employee's leaves
 leavesRouter.get('/employeeid/:id', async (req, res) => {
     const employeeId = req.params.id;
-    //if the employee id is not valid, print "please enter a valid employee id " do this by cross checking the imported employee model
-    if (!Employee.isValid(employeeId)) {
-        return res.status(404).json({ message: 'Please enter a valid employee id.' });
-    }
+  
     try {
-        const leaves = await Leave.find({ employee_id: employeeId });
-        res.json(leaves);
+      // Check if the employee exists
+      const employee = await Employee.findById(employeeId);
+      if (!employee) {
+        return res.status(404).json({ message: 'Please enter a valid employee id.' });
+      }
+  
+      // Fetch the employee's leaves
+      const leaves = await Leave.find({ employee_id: employeeId });
+      res.json(leaves);
     } catch (error) {
-        res.status(500).json({ message: error.message });
+      res.status(500).json({ message: error.message });
     }
+  });
+
+//delete a leave
+leavesRouter.delete("/:id", async (req, res) => {
+    //get the leave id from the request parameters
+    const id = req.params.id;
+    //delete the leave with the id
+    await Leave.findByIdAndDelete(id);
+    //send a 204 status
+    res.status(204).end();
 });
 
 
